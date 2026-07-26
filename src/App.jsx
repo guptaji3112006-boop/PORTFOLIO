@@ -144,7 +144,7 @@ function App() {
                 variants={letterItem}
               >
                 <span className="h-2 w-2 rounded-full bg-black" />
-                &gt;Hello World !/&lt;
+                &lt;Hello World !/&gt;
               </motion.div>
 
               <motion.div

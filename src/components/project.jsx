@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiExternalLink, FiGithub, FiChevronDown } from "react-icons/fi";
 import SectionDivider from "./SectionDivider";
+import AnimatedWord from "./AnimatedWord";
 import Amazon from "../assets/AMAZON.png";
 import spotfixImg from "../assets/spotfix.png";
 import vaulixImg from "../assets/vaulix.png";
@@ -82,45 +83,19 @@ const gridProjects = [
   },
 ];
 
-function AnimatedWord({ letters, rotations, keyPrefix }) {
-  return (
-    <span className="flex">
-      {letters.map((letter, i) => (
-        <motion.span
-          key={`${keyPrefix}-${i}`}
-          initial={{ opacity: 0, y: 18, rotate: rotations[i] }}
-          whileInView={{ opacity: 1, y: 0, rotate: rotations[i] }}
-          viewport={{ once: true, amount: 0.5 }}
-          transition={{
-            duration: 0.5,
-            delay: i * 0.05,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-          whileHover={{
-            color: "#ffffff",
-            y: -10,
-            scale: 1.15,
-            rotate: 0,
-            transition: { duration: 0.3, ease: "easeInOut" },
-          }}
-          className="inline-block cursor-default"
-        >
-          {letter}
-        </motion.span>
-      ))}
-    </span>
-  );
-}
-
 function CardContent({ project }) {
   return (
     <>
       <div className="h-40 sm:h-44 bg-neutral-800 overflow-hidden flex items-center justify-center">
-        <img
-          src={project.image}
-          alt={project.title}
-          className="w-full h-full object-contain"
-        />
+        {project.image ? (
+          <img
+            src={project.image}
+            alt={project.title}
+            className="w-full h-full object-contain"
+          />
+        ) : (
+          <span className="text-neutral-500 text-xs">No screenshot</span>
+        )}
       </div>
 
       <div className="p-4 sm:p-5 flex flex-col flex-1">
