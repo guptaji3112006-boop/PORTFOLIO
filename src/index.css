@@ -1,0 +1,93 @@
+@import url("https://fonts.googleapis.com/css2?family=Audiowide&display=swap");
+@import "tailwindcss";
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: #F4C346;
+  font-family: "Audiowide", sans-serif;
+}
+
+.li {
+  border-radius: 0.75rem;
+  background: #ffc451;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 1.5rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.herosection {
+   
+  font-weight: 900;
+  font-style: normal;
+}
+.hero-float {
+  animation: float 3s ease-in-out infinite;
+  transition:
+    transform 0.4s cubic-bezier(0.34, 1.4, 0.64, 1),
+    box-shadow 0.4s ease;
+}
+ 
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes marqueeReverse {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 25s linear infinite;
+}
+
+.animate-marquee-reverse {
+  animation: marqueeReverse 28s linear infinite;
+}
+
+.marquee-track:hover {
+  animation-play-state: paused;
+}
+
+@keyframes spin-vinyl {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.vinyl {
+  animation: spin-vinyl 3s linear infinite;
+  animation-play-state: paused;
+}
+
+.vinyl.is-playing {
+  animation-play-state: running;
+}
