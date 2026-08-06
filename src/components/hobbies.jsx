@@ -15,7 +15,9 @@ import ht4 from "../assets/ht4.jpg";
 import ht5 from "../assets/ht5.jpg";
 import ht6 from "../assets/ht6.jpg";
 import ht7 from "../assets/ht7.jpg";
-
+import ht8 from "../assets/ht8.jpg";
+import ht9 from "../assets/ht9.jpg";
+import ht10 from "../assets/ht10.jpg";
 const musicItems = [
   { title: "Nusrat Fateh Ali Khan", subtitle: "Remix mixes", image: nushrat },
   { title: "Arijit Singh", subtitle: "Favorite tracks", image: arjit },
@@ -32,6 +34,9 @@ const photoItems = [
   { image: ht5 },
   { image: ht6 },
   { image: ht7 },
+  { image: ht8 },
+  { image: ht9 },
+  { image: ht10 },
 ];
 
 const whatRotations = [-4, 3, -2, 5];
@@ -168,15 +173,11 @@ function PhotoCard({ item, onClick }) {
       onClick={onClick}
       className="h-44 sm:h-110 shrink-0 bg-black rounded-2xl overflow-hidden relative flex items-center justify-center cursor-zoom-in"
     >
-      {item.image ? (
-        <img
-          src={item.image}
-          alt={item.location}
-          className="h-full w-auto object-contain"
-        />
-      ) : (
-        <span className="text-neutral-500 text-xs px-4">Add photo</span>
-      )}
+      <img
+        src={item.image}
+        alt={item.location}
+        className="w-full h-full object-cover"
+      />
     </button>
   );
 }
@@ -233,9 +234,21 @@ export default function Hobbies() {
         </motion.span>
 
         <h2 className="font-anton uppercase text-4xl sm:text-5xl md:text-6xl leading-[0.9] tracking-tight mb-14 flex flex-wrap justify-center gap-x-4">
-          <AnimatedWord letters={["W", "H", "A", "T"]} rotations={whatRotations} keyPrefix="what" />
-          <AnimatedWord letters={["I", "'", "M"]} rotations={imRotations} keyPrefix="im" />
-          <AnimatedWord letters={["I", "N", "T", "O"]} rotations={intoRotations} keyPrefix="into" />
+          <AnimatedWord
+            letters={["W", "H", "A", "T"]}
+            rotations={whatRotations}
+            keyPrefix="what"
+          />
+          <AnimatedWord
+            letters={["I", "'", "M"]}
+            rotations={imRotations}
+            keyPrefix="im"
+          />
+          <AnimatedWord
+            letters={["I", "N", "T", "O"]}
+            rotations={intoRotations}
+            keyPrefix="into"
+          />
         </h2>
 
         <div className="mb-16">
@@ -262,7 +275,10 @@ export default function Hobbies() {
           </h3>
           <InfiniteRow items={photoItems} direction="left">
             {(item) => (
-              <motion.div whileHover={{ y: -6, scale: 1.01 }} transition={{ duration: 0.3 }}>
+              <motion.div
+                whileHover={{ y: -6, scale: 1.01 }}
+                transition={{ duration: 0.3 }}
+              >
                 <PhotoCard item={item} onClick={() => setSelected(item)} />
               </motion.div>
             )}

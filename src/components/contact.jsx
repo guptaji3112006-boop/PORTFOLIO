@@ -90,9 +90,10 @@ export default function Contact() {
             </motion.a>
           ))}
         </div>
-
+            
         <p className="mt-16 text-xs text-black/60">
-          © {new Date().getFullYear()} Designed and developed by Ratnesh Gupta.
+          © {new Date().getFullYear()} Designed and developed by Ratnesh Gupta. <br />
+          Last updated on Aug 2026.
         </p>
       </section>
     </>
