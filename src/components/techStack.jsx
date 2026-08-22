@@ -20,17 +20,17 @@ import AnimatedWord from "./AnimatedWord";
 const techStackData = [
   { name: "HTML5", icon: SiHtml5, color: "#E34F26", level: 90 },
   { name: "CSS3", icon: SiCss, color: "#0277BD", level: 85 },
-  { name: "JavaScript", icon: SiJavascript, color: "#F7DF1E", level: 50 },
-  { name: "React", icon: SiReact, color: "#61DAFB", level: 60 },
-  { name: "Tailwind CSS", icon: SiTailwindcss, color: "#06B6D4", level: 85 },
+  { name: "JavaScript", icon: SiJavascript, color: "#F7DF1E", level: 40 },
+  { name: "React", icon: SiReact, color: "#61DAFB", level: 40 },
+  { name: "Tailwind CSS", icon: SiTailwindcss, color: "#06B6D4", level: 80 },
   { name: "Git", icon: SiGit, color: "#F05032", level: 40 },
   { name: "GitHub", icon: SiGithub, color: "#181717", level: 50 },
-  { name: "Node.js", icon: SiNodedotjs, color: "#339933", level: 45 },
-  { name: "Next.js", icon: SiNextdotjs, color: "#000000", level: 50 },
+  { name: "Node.js", icon: SiNodedotjs, color: "#339933", level: 35 },
+  { name: "Next.js", icon: SiNextdotjs, color: "#000000", level: 35 },
   { name: "MongoDB", icon: SiMongodb, color: "#47A248", level: 50 },
-  { name: "Express.js", icon: SiExpress, color: "#000000", level: 50 },
-  { name: "C++", icon: SiCplusplus, color: "#00599C", level: 70 },
-  { name :"C" , icon: SiC, color: "#A8B9CC", level: 80 }
+  { name: "Express.js", icon: SiExpress, color: "#000000", level: 40 },
+  { name: "C++", icon: SiCplusplus, color: "#00599C", level: 60 },
+  { name :"C" , icon: SiC, color: "#A8B9CC", level: 75 }
 ];
 
 const techRotations = [-4, 3, -2, 5];
