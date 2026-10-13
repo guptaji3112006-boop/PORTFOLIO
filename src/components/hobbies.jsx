@@ -1,6 +1,6 @@
 import { useRef, useEffect, useState } from "react";
-import { motion } from "framer-motion";
-import { FiMusic, FiCamera, FiMapPin, FiX } from "react-icons/fi";
+import { motion, useReducedMotion } from "framer-motion";
+import { FiMusic, FiCamera, FiX, FiArrowLeft, FiArrowRight } from "react-icons/fi";
 import { SiTether } from "react-icons/si";
 import SectionDivider from "./SectionDivider";
 import AnimatedWord from "./AnimatedWord";
@@ -18,6 +18,7 @@ import ht7 from "../assets/ht7.jpg";
 import ht8 from "../assets/ht8.jpg";
 import ht9 from "../assets/ht9.jpg";
 import ht10 from "../assets/ht10.jpg";
+import ht11 from "../assets/ht11.jpg";
 const musicItems = [
   { title: "Nusrat Fateh Ali Khan", subtitle: "Remix mixes", image: nushrat },
   { title: "Arijit Singh", subtitle: "Favorite tracks", image: arjit },
@@ -37,6 +38,7 @@ const photoItems = [
   { image: ht8 },
   { image: ht9 },
   { image: ht10 },
+  { image: ht11 },
 ];
 
 const whatRotations = [-4, 3, -2, 5];
@@ -58,7 +60,36 @@ function StaticRow({ items, children }) {
 function InfiniteRow({ items, direction = "left", speed = 40, children }) {
   const trackRef = useRef(null);
   const offsetRef = useRef(0);
-  const pausedRef = useRef(false);
+  const hoveredRef = useRef(false);
+  const focusedRef = useRef(false);
+  const navigationRef = useRef(null);
+  const reduceMotion = useReducedMotion();
+
+  const navigate = (stepDirection) => {
+    const track = trackRef.current;
+    if (!track || items.length < 2) return;
+
+    const origin = track.children[0].offsetLeft;
+    const cycleWidth = track.children[items.length].offsetLeft - origin;
+    if (!cycleWidth) return;
+
+    const current = ((offsetRef.current % cycleWidth) + cycleWidth) % cycleWidth;
+    const positions = Array.from(track.children)
+      .slice(0, items.length)
+      .map((card) => card.offsetLeft - origin);
+    const target = stepDirection > 0
+      ? positions.find((position) => position > current + 1) ?? cycleWidth
+      : positions.findLast((position) => position < current - 1) ?? positions.at(-1) - cycleWidth;
+
+    if (reduceMotion) {
+      offsetRef.current = ((target % cycleWidth) + cycleWidth) % cycleWidth;
+      track.style.transform = `translateX(${-offsetRef.current}px)`;
+      navigationRef.current = null;
+      return;
+    }
+
+    navigationRef.current = { from: current, to: target, elapsed: 0 };
+  };
 
   useEffect(() => {
     const track = trackRef.current;
@@ -68,16 +99,25 @@ function InfiniteRow({ items, direction = "left", speed = 40, children }) {
     let lastTime = performance.now();
 
     const step = (time) => {
-      const delta = time - lastTime;
+      const delta = Math.min(time - lastTime, 64);
       lastTime = time;
 
-      if (!pausedRef.current) {
-        const halfWidth = track.scrollWidth / 2;
+      const cycleWidth = track.children[items.length]?.offsetLeft - track.children[0]?.offsetLeft;
+      if (cycleWidth > 0) {
+        const navigation = navigationRef.current;
         const dir = direction === "left" ? 1 : -1;
-        offsetRef.current += (dir * speed * delta) / 1000;
 
-        if (offsetRef.current >= halfWidth) offsetRef.current -= halfWidth;
-        if (offsetRef.current < 0) offsetRef.current += halfWidth;
+        if (navigation) {
+          navigation.elapsed += delta;
+          const progress = Math.min(navigation.elapsed / 450, 1);
+          const eased = 1 - Math.pow(1 - progress, 3);
+          offsetRef.current = navigation.from + (navigation.to - navigation.from) * eased;
+          if (progress === 1) navigationRef.current = null;
+        } else if (!hoveredRef.current && !focusedRef.current && !reduceMotion) {
+          offsetRef.current += (dir * speed * delta) / 1000;
+        }
+
+        offsetRef.current = ((offsetRef.current % cycleWidth) + cycleWidth) % cycleWidth;
 
         track.style.transform = `translateX(${-offsetRef.current}px)`;
       }
@@ -87,20 +127,51 @@ function InfiniteRow({ items, direction = "left", speed = 40, children }) {
 
     frameId = requestAnimationFrame(step);
     return () => cancelAnimationFrame(frameId);
-  }, [direction, speed]);
+  }, [direction, speed, items.length, reduceMotion]);
 
   return (
     <div
-      className="relative w-full overflow-hidden mask-[linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"
-      onMouseEnter={() => (pausedRef.current = true)}
-      onMouseLeave={() => (pausedRef.current = false)}
+      className="relative w-full"
+      role="region"
+      aria-label="Photography gallery"
+      onMouseEnter={() => (hoveredRef.current = true)}
+      onMouseLeave={() => (hoveredRef.current = false)}
+      onFocusCapture={() => (focusedRef.current = true)}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) focusedRef.current = false;
+      }}
     >
-      <div ref={trackRef} className="flex gap-5 w-max will-change-transform">
-        {[...items, ...items].map((item, i) => (
-          <div key={i} className="shrink-0">
-            {children(item)}
-          </div>
-        ))}
+      <div
+        id="photography-gallery"
+        className="overflow-hidden mask-[linear-gradient(to_right,transparent,black_8%,black_92%,transparent)]"
+      >
+        <div ref={trackRef} className="flex gap-5 w-max will-change-transform">
+          {[...items, ...items].map((item, i) => (
+            <div key={i} className="shrink-0">
+              {children(item)}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="mt-6 flex items-center justify-center gap-3">
+        <button
+          type="button"
+          aria-label="Previous photo"
+          aria-controls="photography-gallery"
+          onClick={() => navigate(-1)}
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-black px-5 py-3 text-sm font-semibold text-[#F4C346] cursor-pointer hover:bg-black/80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black"
+        >
+          <FiArrowLeft aria-hidden="true" /> Previous
+        </button>
+        <button
+          type="button"
+          aria-label="Next photo"
+          aria-controls="photography-gallery"
+          onClick={() => navigate(1)}
+          className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full bg-black px-5 py-3 text-sm font-semibold text-[#F4C346] cursor-pointer hover:bg-black/80 focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-black"
+        >
+          Next <FiArrowRight aria-hidden="true" />
+        </button>
       </div>
     </div>
   );

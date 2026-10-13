@@ -1,6 +1,7 @@
+import { useEffect, useRef, useState } from "react";
 import { motion, useReducedMotion } from "framer-motion";
 import Navbar from "./components/Navbar";
-import { FiGithub, FiLinkedin, FiInstagram } from "react-icons/fi";
+import { FiGithub, FiLinkedin, FiInstagram, FiX } from "react-icons/fi";
 import heroImg from "./assets/img.jpg";
 import "./App.css";
 import About from "./components/about";
@@ -94,6 +95,22 @@ function FloatingBlob({ className, axis, distance, duration, reduceMotion }) {
 
 function App() {
   const shouldReduceMotion = useReducedMotion();
+  const [isPhotoOpen, setIsPhotoOpen] = useState(false);
+  const photoDialogRef = useRef(null);
+
+  useEffect(() => {
+    if (!isPhotoOpen) return;
+
+    const dialog = photoDialogRef.current;
+    const previousOverflow = document.body.style.overflow;
+    dialog.showModal();
+    document.body.style.overflow = "hidden";
+
+    return () => {
+      dialog.close();
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [isPhotoOpen]);
 
   return (
     <>
@@ -211,7 +228,7 @@ function App() {
             </motion.div>
 
             <motion.div
-              className="relative mx-auto w-full max-w-md lg:max-w-none"
+              className="relative mx-auto w-full max-w-48 sm:max-w-md lg:max-w-none"
               initial={{ opacity: 0, scale: 0.94, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
@@ -231,23 +248,26 @@ function App() {
                 reduceMotion={shouldReduceMotion}
               />
 
-              <motion.div
-                className="relative"
+              <motion.button
+                type="button"
+                aria-label="Open full-size photo of Ratnesh Gupta"
+                aria-haspopup="dialog"
+                onClick={() => setIsPhotoOpen(true)}
+                className="relative block aspect-square w-full overflow-hidden rounded-full border-3 border-black cursor-zoom-in sm:aspect-[3/5] focus-visible:outline-2 focus-visible:outline-offset-8 focus-visible:outline-black"
                 whileHover={shouldReduceMotion ? undefined : { scale: 1.03 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
+                animate={shouldReduceMotion ? undefined : { y: [0, -15, 0] }}
+                transition={{
+                  duration: 0.5,
+                  ease: "easeInOut",
+                  y: { duration: 5, repeat: Infinity, ease: "easeInOut" },
+                }}
               >
-                <motion.img
+                <img
                   src={heroImg}
-                  alt="ME"
-                  className="w-full aspect-[3/5] rounded-full object-cover border-3 border-black"
-                  animate={shouldReduceMotion ? undefined : { y: [0, -15, 0] }}
-                  transition={{
-                    duration: 5,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  }}
+                  alt="Ratnesh Gupta"
+                  className="h-full w-full object-cover object-[50%_5%] sm:object-center"
                 />
-              </motion.div>
+              </motion.button>
             </motion.div>
           </div>
 
@@ -277,6 +297,34 @@ function App() {
       <Education />
       <Hobbies />
       <Contact />
+
+      <dialog
+        ref={photoDialogRef}
+        aria-label="Full-size photo of Ratnesh Gupta"
+        className="fixed inset-0 m-auto h-dvh w-screen max-h-none max-w-none border-0 bg-black/90 p-4 sm:p-8 open:flex open:items-center open:justify-center backdrop:bg-black/60"
+        onCancel={(event) => {
+          event.preventDefault();
+          setIsPhotoOpen(false);
+        }}
+        onClick={(event) => {
+          if (event.target === event.currentTarget) setIsPhotoOpen(false);
+        }}
+      >
+        <button
+          type="button"
+          autoFocus
+          aria-label="Close full-size photo"
+          onClick={() => setIsPhotoOpen(false)}
+          className="absolute top-4 right-4 z-10 flex h-11 w-11 items-center justify-center rounded-full bg-[#F4C346] text-black cursor-pointer focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-white"
+        >
+          <FiX size={22} aria-hidden="true" />
+        </button>
+        <img
+          src={heroImg}
+          alt="Ratnesh Gupta"
+          className="h-auto w-auto max-h-[90dvh] max-w-full rounded-lg object-contain"
+        />
+      </dialog>
     </>
   );
 }

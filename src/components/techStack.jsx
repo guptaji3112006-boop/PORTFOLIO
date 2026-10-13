@@ -13,30 +13,32 @@ import {
   SiExpress,
   SiCplusplus,
   SiC,
+  SiPostman,
 } from "react-icons/si";
 import SectionDivider from "./SectionDivider";
 import AnimatedWord from "./AnimatedWord";
 
 const techStackData = [
-  { name: "HTML5", icon: SiHtml5, color: "#E34F26", level: 90 },
-  { name: "CSS3", icon: SiCss, color: "#0277BD", level: 85 },
-  { name: "JavaScript", icon: SiJavascript, color: "#F7DF1E", level: 40 },
-  { name: "React", icon: SiReact, color: "#61DAFB", level: 40 },
-  { name: "Tailwind CSS", icon: SiTailwindcss, color: "#06B6D4", level: 80 },
-  { name: "Git", icon: SiGit, color: "#F05032", level: 40 },
-  { name: "GitHub", icon: SiGithub, color: "#181717", level: 50 },
-  { name: "Node.js", icon: SiNodedotjs, color: "#339933", level: 35 },
-  { name: "Next.js", icon: SiNextdotjs, color: "#000000", level: 35 },
-  { name: "MongoDB", icon: SiMongodb, color: "#47A248", level: 50 },
-  { name: "Express.js", icon: SiExpress, color: "#000000", level: 40 },
-  { name: "C++", icon: SiCplusplus, color: "#00599C", level: 60 },
-  { name :"C" , icon: SiC, color: "#A8B9CC", level: 75 }
+  { name: "HTML5", icon: SiHtml5, color: "#E34F26" },
+  { name: "CSS3", icon: SiCss, color: "#0277BD" },
+  { name: "JavaScript", icon: SiJavascript, color: "#F7DF1E" },
+  { name: "React", icon: SiReact, color: "#61DAFB" },
+  { name: "Tailwind CSS", icon: SiTailwindcss, color: "#06B6D4" },
+  { name: "Git", icon: SiGit, color: "#F05032" },
+  { name: "GitHub", icon: SiGithub, color: "#181717" },
+  { name: "Node.js", icon: SiNodedotjs, color: "#339933" },
+  { name: "Next.js", icon: SiNextdotjs, color: "#000000" },
+  { name: "MongoDB", icon: SiMongodb, color: "#47A248" },
+  { name: "Express.js", icon: SiExpress, color: "#000000" },
+  { name: "Postman", icon: SiPostman, color: "#FF6C37" },
+  { name: "C++", icon: SiCplusplus, color: "#00599C" },
+  { name: "C", icon: SiC, color: "#A8B9CC" },
 ];
 
 const techRotations = [-4, 3, -2, 5];
 const stackRotations = [4, -3, 2, -4, 3];
 
-function TechCard({ name, icon: Icon, color, level, index }) {
+function TechCard({ name, icon: Icon, color }) {
   return (
     <motion.div
       className="flex flex-col items-center"
@@ -55,41 +57,6 @@ function TechCard({ name, icon: Icon, color, level, index }) {
         <Icon size={48} color={color} />
         <span className="text-black text-xs font-medium text-center">{name}</span>
       </motion.div>
-
-      <div className="w-full flex items-center gap-2 mt-3 px-1">
-        <div className="relative flex-1 h-1.5 rounded-full bg-black/10 overflow-hidden">
-          <motion.div
-            className="absolute inset-y-0 left-0 rounded-full"
-            style={{ background: "linear-gradient(90deg, #0A0A0A, #3A3A3A)" }}
-            initial={{ width: 0 }}
-            whileInView={{ width: `${level}%` }}
-            viewport={{ once: true, amount: 0.4 }}
-            transition={{ duration: 1, delay: 0.1 + index * 0.05, ease: [0.22, 1, 0.36, 1] }}
-          >
-            <motion.div
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent)",
-              }}
-              initial={{ x: "-100%" }}
-              whileInView={{ x: "100%" }}
-              viewport={{ once: true, amount: 0.4 }}
-              transition={{ duration: 1, delay: 0.35 + index * 0.05, ease: "easeInOut" }}
-            />
-          </motion.div>
-        </div>
-
-        <motion.span
-          initial={{ opacity: 0 }}
-          whileInView={{ opacity: 1 }}
-          viewport={{ once: true, amount: 0.4 }}
-          transition={{ duration: 0.4, delay: 0.7 + index * 0.05 }}
-          className="text-[10px] font-bold text-black/60 w-7 text-right shrink-0"
-        >
-          {level}%
-        </motion.span>
-      </div>
     </motion.div>
   );
 }
@@ -121,8 +88,8 @@ export default function TechStack() {
             show: { transition: { staggerChildren: 0.08 } },
           }}
         >
-          {techStackData.map((tech, i) => (
-            <TechCard key={tech.name} {...tech} index={i} />
+          {techStackData.map((tech) => (
+            <TechCard key={tech.name} {...tech} />
           ))}
         </motion.div>
       </motion.section>
